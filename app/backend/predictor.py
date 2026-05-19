@@ -2,6 +2,7 @@ import os
 import json
 import joblib
 import pandas as pd
+import time
 
 # ==========================================
 # Paths
@@ -23,15 +24,47 @@ GENES_PATH = os.path.join(
 )
 
 # ==========================================
-# Load artifacts
+# Lazy-load artifacts (wait for training to finish)
 # ==========================================
 
-model = joblib.load(MODEL_PATH)
+model = None
+scaler = None
+selected_genes = None
+_artifacts_loaded = False
 
-scaler = joblib.load(SCALER_PATH)
 
-with open(GENES_PATH, "r") as f:
-    selected_genes = json.load(f)
+def _wait_for_files(paths, timeout=300, interval=1):
+    """Wait until all paths exist or timeout (seconds)."""
+    start = time.time()
+    while True:
+        if all(os.path.exists(p) for p in paths):
+            return True
+        if time.time() - start > timeout:
+            return False
+        time.sleep(interval)
+
+
+def _load_artifacts(timeout=300):
+    """Load model, scaler and selected genes, waiting up to timeout seconds."""
+    global model, scaler, selected_genes, _artifacts_loaded
+
+    if _artifacts_loaded:
+        return
+
+    paths = [MODEL_PATH, SCALER_PATH, GENES_PATH]
+
+    if not _wait_for_files(paths, timeout=timeout):
+        raise FileNotFoundError(
+            f"Model artifacts not found in {MODEL_DIR} after {timeout} seconds"
+        )
+
+    model = joblib.load(MODEL_PATH)
+    scaler = joblib.load(SCALER_PATH)
+
+    with open(GENES_PATH, "r") as f:
+        selected_genes = json.load(f)
+
+    _artifacts_loaded = True
 
 # ==========================================
 # Prediction function

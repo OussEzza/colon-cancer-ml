@@ -3,10 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 import os
-from backend.predictor import (
-    predict,
-    selected_genes
-)
+from backend import predictor
 
 app = FastAPI(
     title="Colon Cancer Prediction API"
@@ -64,9 +61,13 @@ def health():
 @app.get("/genes")
 def genes():
 
-    return {
-        "selected_genes": selected_genes
-    }
+    # Ensure artifacts are loaded and return the selected genes
+    try:
+        predictor._load_artifacts()
+    except FileNotFoundError:
+        return {"selected_genes": []}
+
+    return {"selected_genes": predictor.selected_genes}
 
 
 @app.post("/predict")
@@ -74,17 +75,17 @@ def predict_endpoint(
     input_data: dict
 ):
 
+    # Ensure artifacts are loaded before validation and prediction
+    try:
+        predictor._load_artifacts()
+    except FileNotFoundError:
+        return {"error": "Model artifacts not available yet"}
+
     # Check all genes exist
-    for gene in selected_genes:
-
+    for gene in predictor.selected_genes:
         if gene not in input_data:
+            return {"error": f"Missing gene: {gene}"}
 
-            return {
-                "error": (
-                    f"Missing gene: {gene}"
-                )
-            }
-
-    result = predict(input_data)
+    result = predictor.predict(input_data)
 
     return result
