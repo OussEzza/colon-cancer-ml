@@ -1,0 +1,10 @@
+app/backend/__pycache__/
+__pycache__/
+*.pyc
+.env
+.vscode/
+.idea/
+
+model/*.pkl
+
+.DS_Store

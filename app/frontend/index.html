@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Colon Cancer Prediction
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/static/style.css"
+    >
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>
+            Colon Cancer Prediction
+        </h1>
+
+        <p class="subtitle">
+            AI-Based Gene Expression Analysis
+        </p>
+
+        <div
+            id="api-status"
+            class="status"
+        >
+            Checking API status...
+        </div>
+
+        <form id="prediction-form">
+
+            <div
+                id="gene-inputs"
+                class="grid"
+            ></div>
+
+            <div class="buttons">
+
+                <button
+                    type="button"
+                    class="demo-btn"
+                    id="demo-btn"
+                >
+                    Load Demo Data
+                </button>
+
+                <button
+                    type="button"
+                    class="reset-btn"
+                    id="reset-btn"
+                >
+                    Reset
+                </button>
+
+                <button
+                    type="submit"
+                    class="predict-btn"
+                >
+                    Predict
+                </button>
+
+            </div>
+
+        </form>
+
+        <div
+            id="loading"
+            class="hidden"
+        >
+            Predicting...
+        </div>
+
+        <div
+            id="result"
+            class="result-card hidden"
+        >
+
+            <div class="result-title">
+                Prediction Result
+            </div>
+
+            <div id="prediction-badge"></div>
+
+            <div
+                id="confidence-text"
+                class="confidence"
+            ></div>
+
+        </div>
+
+    </div>
+
+    <script src="/static/script.js"></script>
+
+</body>
+
+</html>

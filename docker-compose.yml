@@ -1,0 +1,31 @@
+services:
+
+  training:
+
+    build:
+      context: ./training
+
+    container_name:
+      colon-cancer-training
+
+    volumes:
+      - ./model:/model
+
+    working_dir: /training
+
+  app:
+
+    build:
+      context: ./app
+
+    container_name:
+      colon-cancer-app
+
+    ports:
+      - "8000:8000"
+
+    volumes:
+      - ./model:/model
+
+    depends_on:
+      - training
