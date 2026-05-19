@@ -11,7 +11,7 @@ services:
     volumes:
       - ./model:/model
 
-    working_dir: /training
+    command: python train.py
 
   app:
 
