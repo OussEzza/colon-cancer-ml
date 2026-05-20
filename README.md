@@ -57,7 +57,7 @@ colon-cancer-ml/
 
 2. **Build and run with Docker Compose**
    ```bash
-   sudo docker compose up --build
+   docker compose up --build
    ```
 
    This command will:
